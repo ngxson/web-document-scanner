@@ -27,19 +27,21 @@ Note: For convenience, the whole project is bundled into **one single js file**,
 1. Install nodejs (any version >= 16 should work)
 2. Enable script execution for powershell, see [this guide](https://superuser.com/questions/106360/how-to-enable-execution-of-powershell-scripts)
 3. Download the `web-document-scanner.js` from the latest release, [click here to go to release](https://github.com/ngxson/web-document-scanner/releases)
-4. Run `node web-document-scanner.js`
+4. Run `$env:PASSWORD='your_password_here'; node web-document-scanner.js`
+5. Access http://localhost:9080
+
+Alternatively, you can make a batch file to launch it automatically.
 
 ### Mac
 
 1. Install nodejs (any version >= 16 should work)
 2. Install scanline from [this repository](https://github.com/klep/scanline). (Hint: you can use the pre-built .pkg file)
 3. Download the `web-document-scanner.js` from the latest release, [click here to go to release](https://github.com/ngxson/web-document-scanner/releases)
-4. Run `node web-document-scanner.js`
+4. Run `PASSWORD='your_password_here' node web-document-scanner.js`
+5. Access http://localhost:9080
+
+Alternatively, you can make a shell file to launch it automatically.
 
 ### Linux
 
 (TODO)
-
-TODO:
-- front: add download single image button
-- front: add image viewer

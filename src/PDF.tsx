@@ -51,7 +51,7 @@ export function ExportAsPDF() {
     </button>
   } else {
     return <PDFDownloadLink key="pdfURL" document={doc} fileName={name} className="btn btn-outline-primary url-download-pdf">
-      {({ blob, url, loading }) => {
+      {({ loading }) => {
         if (!loading) {
           // auto download
           if (name !== LAST_DOWNLOADED_PDF) {

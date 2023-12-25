@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs').promises;
 const fsSync = require('fs');
+const { isImageFileName } = require('./utils.cjs');
 let isScanning = false;
 
 let OUTPUT_DIR = '.';
@@ -16,11 +17,14 @@ const init = () => {
 const listFiles = async () => {
   const assetPath = path.join(OUTPUT_DIR);
   const list = await fs.readdir(assetPath);
-  return await Promise.all(list.map(async (f) => {
-    const fPath = path.join(OUTPUT_DIR, f);
-    const stats = await fs.stat(fPath);
-    return { name: f, date: stats.mtime.getTime() };
-  }));
+  return await Promise.all(list
+    .filter(f => isImageFileName(f))
+    .map(async (f) => {
+      const fPath = path.join(OUTPUT_DIR, f);
+      const stats = await fs.stat(fPath);
+      return { name: f, date: stats.mtime.getTime() };
+    }
+  ));
 };
 
 /** @type {(filePath: string) => Promise<Buffer>} */

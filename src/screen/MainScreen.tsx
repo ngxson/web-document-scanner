@@ -64,13 +64,20 @@ function FileCard({ file }: { file: IFile }) {
   };
 
   return <div className={`card file ${isSelected ? 'selected' : ''}`}>
-    <img src={`/thumbnail?file=${file.name}&token=${token}`} />
+    {/* TODO: use thumbnail */}
+    <img src={`/view?file=${file.name}&token=${token}`} onClick={() => {
+      window.open(`/view?file=${file.name}&token=${token}`, '_blank')!.focus();
+    }} />
     <div className='control'>
       <button className='btn btn-sm btn-outline-danger' disabled={isSelected} onClick={askDelete}>Delete</button>
       &nbsp;&nbsp;
       <button className={`btn btn-sm ${isSelected ? 'btn-primary' : 'btn-outline-primary'}`} onClick={toggleSelection}>
         {isSelected ? `🗹 Unselect [${selectedIndex + 1}]` : 'Select'}
       </button>
+      &nbsp;&nbsp;
+      {!isSelected && <a href={`/download?file=${file.name}&token=${token}`} target='_blank' className='btn btn-sm btn-outline-success'>
+        Save
+      </a>}
     </div>
   </div>
 }

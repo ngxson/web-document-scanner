@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const { Image } = require('imagescript');
+//const { Image } = require('imagescript');
 
 /** @type {(password: string) => string} */
 function generateToken(password) {
@@ -26,7 +26,8 @@ const MAX_THUMBNAIL_DIM = 500;
 const THUMBNAIL_CACHE = {};
 /** @type {(fileName: string, inputImage: Buffer) => Promise<Buffer>} */
 async function generateThumbnail(fileName, inputImage) {
-  if (THUMBNAIL_CACHE[fileName]) {
+  // TODO: imagescript does not work if we bundle everything into single .js file
+  /*if (THUMBNAIL_CACHE[fileName]) {
     return THUMBNAIL_CACHE[fileName];
   }
   const image = await Image.decode(inputImage);
@@ -40,12 +41,19 @@ async function generateThumbnail(fileName, inputImage) {
   image.resize(newW, newH);
   const output = await image.encodeJPEG(75);
   THUMBNAIL_CACHE[fileName] = Buffer.from(output);
-  return THUMBNAIL_CACHE[fileName];
+  return THUMBNAIL_CACHE[fileName];*/
+  return inputImage;
 }
+
+/** @type {(fileName: string) => boolean} */
+const isImageFileName = (fileName) => {
+  return !!fileName.match(/\.(jpeg|jpg|tif|gif|png|bmp)$/i);
+};
 
 module.exports = {
   DEBUG: process.env.NODE_ENV === 'development',
   generateToken,
   checkToken,
   generateThumbnail,
+  isImageFileName,
 };
