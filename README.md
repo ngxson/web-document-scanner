@@ -1,30 +1,23 @@
-# React + TypeScript + Vite
+# 📄 Web Document Scanner
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Motivation: On Windows / macOS / Linux, you can easily share a printer for other computers in the same network to use (via CUPS for example). However, sharing a scanner is quite tricky. This web application is made to allow sharing scanner from one computer.
 
-Currently, two official plugins are available:
+The application consists of 2 parts:
+- Backend: To trigger scan function, manage files,...
+- Frontend: To display the result, export to PDF,...
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+TODO: add screenshots
 
-## Expanding the ESLint configuration
+## Supported platforms
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+While I'm developing this application using my Fedora Linux PC, I couldn't (yet) make it work on Linux (using SANE)
 
-- Configure the top-level `parserOptions` property like this:
+| Platform | Implementation | Working? |
+| --- | --- | --- |
+| Windows | WIA via powershell script | ✅ Yes |
+| macOS | using [scanline](https://github.com/klep/scanline) | ✅ Yes |
+| Linux | using [SANE](http://www.sane-project.org/) | ❌ No |
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+## How to install
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+TODO
