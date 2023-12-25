@@ -7,7 +7,7 @@ import { useInterval } from 'usehooks-ts';
 type AuthState = 'loading' | 'loggedIn' | 'loggedOut';
 export interface IFile {
   name: string,
-  date: Date,
+  date: number,
 };
 
 const agent = axios.create({
@@ -64,6 +64,7 @@ export const AppContextProvider = ({ children }: any) => {
       setAuth('loggedOut');
     } else {
       setAuth('loggedIn');
+      (data.files as IFile[]).sort((a, b) => b.date - a.date);
       setFiles(data.files);
     }
   };
