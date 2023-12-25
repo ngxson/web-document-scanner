@@ -23,9 +23,12 @@ function checkToken(token, password) {
 }
 
 const MAX_THUMBNAIL_DIM = 500;
-/** @type {(inputImage: Buffer) => Promise<Buffer>} */
-async function generateThumbnail(inputImage) {
-  // TODO: cache the image
+const THUMBNAIL_CACHE = {};
+/** @type {(fileName: string, inputImage: Buffer) => Promise<Buffer>} */
+async function generateThumbnail(fileName, inputImage) {
+  if (THUMBNAIL_CACHE[fileName]) {
+    return THUMBNAIL_CACHE[fileName];
+  }
   const image = await Image.decode(inputImage);
   let newH = MAX_THUMBNAIL_DIM;
   let newW = MAX_THUMBNAIL_DIM;
@@ -36,7 +39,8 @@ async function generateThumbnail(inputImage) {
   }
   image.resize(newW, newH);
   const output = await image.encodeJPEG(75);
-  return Buffer.from(output);
+  THUMBNAIL_CACHE[fileName] = Buffer.from(output);
+  return THUMBNAIL_CACHE[fileName];
 }
 
 module.exports = {

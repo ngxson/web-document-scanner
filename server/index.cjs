@@ -89,7 +89,7 @@ app.get('/thumbnail', authMiddleware, protectPathTraversal, async (req, res) => 
   try {
     const buffer = await scan.getFileBuffer(file);
     res.setHeader('content-type', 'image/jpeg');
-    res.send(await generateThumbnail(buffer));
+    res.send(await generateThumbnail(file, buffer));
   } catch (e) {
     console.error(e);
     res.status(500).send({
