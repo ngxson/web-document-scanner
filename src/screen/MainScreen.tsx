@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { IFile, useAppContext } from '../AppContext';
 import { ExportAsPDF } from '../PDF';
 import loadingImg from '../assets/loading.gif';
@@ -9,7 +10,18 @@ function Loading() {
 }
 
 function MainScreen() {
-  const { files, reloadFiles } = useAppContext();
+  const { files, logout, isScanning, triggerScan } = useAppContext();
+  const [blockScan, setBlockScan] = useState(false);
+
+  const scan = async () => {
+    setBlockScan(true);
+    try {
+      await triggerScan();
+    } catch (e) {
+      // ignored
+    }
+    setBlockScan(false);
+  };
 
   if (files === null) return <Loading />;
 
@@ -17,9 +29,17 @@ function MainScreen() {
     <div className='col col-12'>
       Actions:
       &nbsp;
-      <button className='btn btn-primary'>+ Scan</button>
+      <button className='btn btn-primary' disabled={blockScan || isScanning} onClick={scan}>
+        {isScanning ? 'Scan in progress...' : '+ Scan'}
+      </button>
       &nbsp;&nbsp;
       <ExportAsPDF />
+      &nbsp;&nbsp;
+      |
+      &nbsp;&nbsp;
+      <button className='btn btn-outline-primary' onClick={logout}>
+        Logout
+      </button>
     </div>
     {files.map(f => <div className='col col-xs-12 col-sm-6 col-md-4 col-lg-3' key={f.name}>
       <FileCard file={f} />

@@ -2,6 +2,7 @@
 
 import axios from 'axios';
 import { createContext, useContext, useEffect, useState } from 'react';
+import { useInterval } from 'usehooks-ts';
 
 type AuthState = 'loading' | 'loggedIn' | 'loggedOut';
 export interface IFile {
@@ -19,6 +20,8 @@ const AppContext = createContext<{
   login(password: string): Promise<boolean>,
   logout(): void,
   token: string,
+  isScanning: boolean,
+  triggerScan(): Promise<void>,
   // list files
   files: IFile[],
   reloadFiles(): void,
@@ -33,6 +36,7 @@ const AppContext = createContext<{
 export const AppContextProvider = ({ children }: any) => {
   const [auth, setAuth] = useState<AuthState>('loading');
   const [files, setFiles] = useState<IFile[]>(null as any);
+  const [isScanning, setScanning] = useState<boolean>(false);
   const [selectedFiles, setSelectedFiles] = useState<IFile[]>([]);
   const token = localStorage.getItem('token') || '';
 
@@ -86,18 +90,35 @@ export const AppContextProvider = ({ children }: any) => {
     setSelectedFiles([]);
   };
 
+  const _updateScanStatus = async () => {
+    const { data } = await agent.get('/scan');
+    setScanning(!!data.isScanInProgress);
+  };
+
+  const triggerScan = async () => {
+    await agent.post('/scan');
+    await _updateScanStatus();
+  };
+  
   useEffect(() => {
     reloadFiles();
   }, []);
+
+  useInterval(
+    _updateScanStatus,
+    auth === 'loggedIn' ? 2500 : null,
+  );
 
   return <AppContext.Provider
     value={{
       auth,
       login,
       logout,
+      isScanning,
       files,
       reloadFiles,
       deleteFile,
+      triggerScan,
       selectedFiles,
       addSelectFile,
       removeSelectFile,
