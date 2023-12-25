@@ -8,6 +8,12 @@ The application consists of 2 parts:
 
 TODO: add screenshots
 
+## Features
+
+- Login with a password
+- Trigger scan new page from web
+- Select multiple pages and export them to a single PDF
+
 ## Supported platforms
 
 While I'm developing this application using my Fedora Linux PC, I couldn't (yet) make it work on Linux (using SANE)

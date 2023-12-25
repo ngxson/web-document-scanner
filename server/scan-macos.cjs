@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs').promises;
 const fsSync = require('fs');
+const { exec } = require('child_process');
 const { isImageFileName } = require('./utils.cjs');
 let isScanning = false;
 

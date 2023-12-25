@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { useInterval } from 'usehooks-ts';
+import { useInterval, useUpdateEffect } from 'usehooks-ts';
 
 type AuthState = 'loading' | 'loggedIn' | 'loggedOut';
 export interface IFile {
@@ -32,6 +32,8 @@ const AppContext = createContext<{
   removeSelectFile(file: IFile): void,
   clearSelectFile(): void,
 }>({} as any);
+
+// TODO: https://usehooks-ts.com/react-hook/use-local-storage
 
 export const AppContextProvider = ({ children }: any) => {
   const [auth, setAuth] = useState<AuthState>('loading');
@@ -109,6 +111,12 @@ export const AppContextProvider = ({ children }: any) => {
     _updateScanStatus,
     auth === 'loggedIn' ? 2500 : null,
   );
+
+  useUpdateEffect(() => {
+    if (isScanning === false) {
+      reloadFiles();
+    }
+  }, [isScanning]);
 
   return <AppContext.Provider
     value={{
