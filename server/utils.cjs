@@ -17,7 +17,7 @@ function checkToken(token, password) {
     const expectedHash = hmac.update(time).digest('hex');
     return hash === expectedHash;
   } catch (err) {
-    console.error(err);
+    // console.error(err);
     return false;
   }
 }

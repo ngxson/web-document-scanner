@@ -2,6 +2,7 @@ const path = require('path');
 const fs = require('fs').promises;
 const fsSync = require('fs');
 const { exec } = require('child_process');
+const { isImageFileName } = require('./utils.cjs');
 let isScanning = false;
 
 let OUTPUT_DIR = '.';
@@ -9,7 +10,7 @@ const init = () => {
   OUTPUT_DIR = path.join(__dirname, 'output');
   console.log('Output dir is', OUTPUT_DIR);
   if (!fsSync.existsSync(OUTPUT_DIR)) {
-    fsSync.mkdirSync(OUTPUT_DIR);
+    mkdirRecursive(OUTPUT_DIR);
   }
 };
 
@@ -94,10 +95,12 @@ const startScan = async () => {
 
   const scriptContent = POWERSCRIPT_TEMPLATE
     .replace('REPLACE_BY_OUTPUT_DIR', OUTPUT_DIR);
-  fs.writeFileSync(scriptTmpPath, scriptContent);
+  fsSync.writeFileSync(scriptTmpPath, scriptContent);
 
   return new Promise((resolve, reject) => {
     const childProcess = exec(`powershell -File "${scriptTmpPath}"`);
+    childProcess.stdout.on('data', data => console.log(data.toString()));
+    childProcess.stderr.on('data', data => console.error(data.toString()));
     childProcess.on('exit', () => {
       isScanning = false;
       resolve(); // Scan complete
@@ -107,6 +110,23 @@ const startScan = async () => {
 
 /** @type {() => boolean} */
 const isScanInProgress = () => isScanning;
+
+// https://joshtronic.com/2021/01/17/recursively-create-directories-with-nodejs/
+/** @type {(inputPath: string) => void} */
+function mkdirRecursive(inputPath) {
+  inputPath.split('/').reduce(
+    (directories, directory) => {
+      directories += `${directory}/`;
+  
+      if (!fsSync.existsSync(directories)) {
+        fsSync.mkdirSync(directories);
+      }
+  
+      return directories;
+    },
+    '',
+  );
+}
 
 module.exports = {
   init,
